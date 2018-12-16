@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportNews.Web", "SportNews.Web\SportNews.Web.csproj", "{C5862A9A-B37B-45FB-A1F8-F699B336CB30}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportNews.Data", "SportNews.Data\SportNews.Data.csproj", "{96208057-6BDC-4AC7-B712-A26AC3CE4CEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C5862A9A-B37B-45FB-A1F8-F699B336CB30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5862A9A-B37B-45FB-A1F8-F699B336CB30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5862A9A-B37B-45FB-A1F8-F699B336CB30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96208057-6BDC-4AC7-B712-A26AC3CE4CEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96208057-6BDC-4AC7-B712-A26AC3CE4CEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96208057-6BDC-4AC7-B712-A26AC3CE4CEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96208057-6BDC-4AC7-B712-A26AC3CE4CEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
