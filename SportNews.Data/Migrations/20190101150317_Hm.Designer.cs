@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportNews.Web.Data;
 
 namespace SportNews.Web.Data.Migrations
 {
     [DbContext(typeof(SportNewsDbContext))]
-    partial class SportNewsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190101150317_Hm")]
+    partial class Hm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,8 +223,6 @@ namespace SportNews.Web.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
-
-                    b.Property<byte[]>("Avatar");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();

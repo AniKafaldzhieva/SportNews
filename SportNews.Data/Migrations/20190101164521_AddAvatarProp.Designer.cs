@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportNews.Web.Data;
 
 namespace SportNews.Web.Data.Migrations
 {
     [DbContext(typeof(SportNewsDbContext))]
-    partial class SportNewsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190101164521_AddAvatarProp")]
+    partial class AddAvatarProp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

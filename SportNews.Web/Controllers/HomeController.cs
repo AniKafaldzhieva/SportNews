@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using SportNews.Web.Models;
-
-namespace SportNews.Web.Controllers
+﻿namespace SportNews.Web.Controllers
 {
+	using System.Diagnostics;
+	using AutoMapper;
+	using Microsoft.AspNetCore.Mvc;
+	using SportNews.Web.Data;
+	using SportNews.Web.Models;
+	using SportNews.Web.ViewModels;
+
 	public class HomeController : Controller
 	{
+		private readonly IMapper mapper;
+		private readonly SportNewsDbContext dbContext; 
+
+		public HomeController(IMapper mapper)
+		{
+			this.mapper = mapper;
+		}
+
 		public IActionResult Index()
 		{
 			return View();

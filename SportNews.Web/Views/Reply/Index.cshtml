@@ -1,0 +1,79 @@
+﻿@model SportNews.Web.ViewModels.ReplyViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>@Model.Post.Title</h2>
+
+<p>
+    <a asp-action="Create" asp-route-postid="@Model.Post.ID">Отговори</a>
+</p>
+@*<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Content)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreatedOn)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Post)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Author)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedOn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Post.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author.Id)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>*@
+<div id="container">
+    @foreach (var item in Model.Replies)
+    {
+    <div style="display: inline-grid; padding: 10px 10px 5px; background-color: #F8F8F8">
+        <div style="background-color: white">
+            <article>
+                <aside class="col-xs-5 col-sm-2 col-lg-3" style="text-align: center">
+                    <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Author.Avatar))" alt="Notebook" style="width:60%;">
+                    @item.Author.UserName
+                    <br/>
+                    Коментари: @Model.Replies.Where(r => r.AuthorID == item.AuthorID).Count()
+                </aside>
+                <div class="col-xs-7 col-sm-6 col-lg-8">
+                    <div>
+                        @item.CreatedOn
+                    </div>
+                    <div>
+                        @Html.Raw(@item.Content)
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+}
+</div>
+

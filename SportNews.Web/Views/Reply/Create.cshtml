@@ -1,0 +1,67 @@
+﻿@model SportNews.Models.Reply
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>Reply</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea class="form-control" name="Content" rows="10"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            @Html.HiddenFor(model => model.PostID)
+            @Html.HiddenFor(model => model.Post)
+            @Html.HiddenFor(model => model.AuthorID)
+            @Html.HiddenFor(model => model.Author)
+            @*<div class="form-group">
+            <label asp-for="CreatedOn" class="control-label"></label>
+            <input asp-for="CreatedOn" class="form-control" />
+            <span asp-validation-for="CreatedOn" class="text-danger"></span>
+        </div>*@
+            @*<div class="form-group">
+            <label asp-for="PostID" class="control-label"></label>
+            <select asp-for="PostID" class="form-control" asp-items="ViewBag.PostID"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="AuthorID" class="control-label"></label>
+            <select asp-for="AuthorID" class="form-control" asp-items="ViewBag.AuthorID"></select>
+        </div>*@
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" asp-route-postid="@Model.Post.ID">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            height: 500,
+            menubar: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor textcolor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code help wordcount'
+            ],
+            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css']
+        });
+    </script>
+}
+}

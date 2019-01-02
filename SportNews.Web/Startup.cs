@@ -1,5 +1,7 @@
 ﻿namespace SportNews.Web
 {
+	using AutoMapper;
+	using SportNews.Web.Data;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.AspNetCore.Identity;
 	using Microsoft.AspNetCore.Hosting;
@@ -8,7 +10,7 @@
 	using Microsoft.EntityFrameworkCore;
 	using Microsoft.Extensions.Configuration;
 	using Microsoft.Extensions.DependencyInjection;
-	using SportNews.Web.Data;
+	using SportNews.Models;
 
 	public class Startup
 	{
@@ -29,11 +31,18 @@
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
+			services.AddAutoMapper();
+
 			services.AddDbContext<SportNewsDbContext>(options =>
 				options.UseSqlServer(
 					Configuration.GetConnectionString("DefaultConnection")));
-			services.AddDefaultIdentity<IdentityUser>()
-				.AddEntityFrameworkStores<SportNewsDbContext>();
+			//services.AddDefaultIdentity<IdentityUser>()
+			//	.AddEntityFrameworkStores<SportNewsDbContext>();
+
+			services.AddIdentity<User, Role>()
+				.AddEntityFrameworkStores<SportNewsDbContext>()
+				.AddDefaultUI()
+				.AddDefaultTokenProviders();
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 		}
