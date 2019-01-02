@@ -11,6 +11,8 @@
 	using Microsoft.Extensions.Configuration;
 	using Microsoft.Extensions.DependencyInjection;
 	using SportNews.Models;
+	using Microsoft.AspNetCore.Identity.UI.Services;
+	using SportNews.Web.Areas.Identity.Services;
 
 	public class Startup
 	{
@@ -43,6 +45,9 @@
 				.AddEntityFrameworkStores<SportNewsDbContext>()
 				.AddDefaultUI()
 				.AddDefaultTokenProviders();
+
+			services.AddSingleton<IEmailSender, EmailSender>();
+			services.Configure<AuthMessageSenderOptions>(Configuration);
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 		}

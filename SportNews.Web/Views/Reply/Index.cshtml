@@ -55,14 +55,19 @@
     @foreach (var item in Model.Replies)
     {
     <div style="display: inline-grid; padding: 10px 10px 5px; background-color: #F8F8F8">
-        <div style="background-color: white">
+        <div style="background-color: white; border: 1px solid; border-color: gainsboro; border-radius: 3px">
             <article>
-                <aside class="col-xs-5 col-sm-2 col-lg-3" style="text-align: center">
-                    <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Author.Avatar))" alt="Notebook" style="width:60%;">
-                    @item.Author.UserName
-                    <br/>
-                    Коментари: @Model.Replies.Where(r => r.AuthorID == item.AuthorID).Count()
-                </aside>
+                <ul class="col-xs-5 col-sm-2 col-lg2" style="text-align: center; margin: 5px 0 5px;">
+                    <li>
+                        <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Author.Avatar))" alt="Notebook" style="width:100%;">
+                    </li>
+                    <li>
+                        @item.Author.UserName
+                    </li>
+                    <li>
+                        Коментари: @Model.Replies.Where(r => r.AuthorID == item.AuthorID).Count()
+                    </li>
+                </ul>
                 <div class="col-xs-7 col-sm-6 col-lg-8">
                     <div>
                         @item.CreatedOn

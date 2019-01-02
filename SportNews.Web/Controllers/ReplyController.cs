@@ -28,7 +28,10 @@ namespace SportNews.Web.Controllers
         {
 			var sportNewsDbContext = _context.Replies.Where(p => p.PostID == postid).ToList();
 			var a = _context.Posts.Where(p => p.ID == postid).FirstOrDefault().Replies;
-			var b = _context.Users.Where(p => p.Id == "ee18cb46-6198-48dd-8109-d0ce203d3d08").FirstOrDefault().Replies;
+			var c = this.User.Identity.Name;
+
+			var b = _context.Users.Where(p => p.UserName == c).FirstOrDefault().Replies;
+			
 			var model = new ReplyViewModel();
 			model.Post = _context.Posts.Where(p => p.ID == postid).FirstOrDefault();
 			model.Replies = _context.Posts.Where(p => p.ID == postid).FirstOrDefault().Replies.ToList();

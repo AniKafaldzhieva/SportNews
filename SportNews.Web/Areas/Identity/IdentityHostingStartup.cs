@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SportNews.Models;
 using SportNews.Web.Data;
 
 [assembly: HostingStartup(typeof(SportNews.Web.Areas.Identity.IdentityHostingStartup))]
@@ -15,7 +16,11 @@ namespace SportNews.Web.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
-            });
+				//services.AddDefaultIdentity<User>(config =>
+				//{
+				//	config.SignIn.RequireConfirmedEmail = true;
+				//});
+			});
         }
     }
 }

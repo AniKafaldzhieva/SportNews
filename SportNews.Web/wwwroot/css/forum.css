@@ -101,3 +101,7 @@ span{
 p {
     word-break: break-word;
 }
+
+li {
+    list-style: none;
+}
