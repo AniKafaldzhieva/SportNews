@@ -2,7 +2,6 @@
 {
 	using Microsoft.AspNetCore.Mvc;
 	using SportNews.Services.Interfaces;
-	using SportNews.Web.Data;
 	using SportNews.Web.ViewModels;
 	using System;
 	using System.Collections.Generic;
@@ -10,53 +9,62 @@
 
 	public class FixtureController : Controller
 	{
-		private readonly IFixtureService service;
-		private readonly SportNewsDbContext context;
+		private readonly IFixtureService fixtureService;
 		private readonly IStandingService standingService;
+		private readonly IFootballService footballService;
 
-		public FixtureController(IFixtureService service, SportNewsDbContext context, IStandingService standingService)
+		public FixtureController(IFixtureService fixtureService, IStandingService standingService, IFootballService footballService)
 		{
-			this.service = service;
-			this.context = context;
+			this.fixtureService = fixtureService;
 			this.standingService = standingService;
+			this.footballService = footballService;
 		}
 		public IActionResult Index(string id)
 		{
-			var model = new FixtureViewModel();
-			var list = new List<Fixture>();
+			FixtureViewModel fixtureViewModel = new FixtureViewModel();
+			IList<Fixture> fixtures = new List<Fixture>();
+			var allFixtures = fixtureService.AddFixture(DateTime.Now.Date);
 
-			if (id != null)
+			if (id == null && allFixtures.result != null)
 			{
-				var fixtureData = service.AddFixture(DateTime.Now.Date, id);
+				id = footballService.GetLeagueByID(allFixtures.result.FirstOrDefault().league_key).LeagueID.ToString();
+			}
 
+			var fixtureData = fixtureService.AddFixture(DateTime.Now.Date, id);
+
+			if (fixtureData.success == 1 && fixtureData.result != null)
+			{
 				foreach (var f in fixtureData.result.Where(x => x.league_key == id))
 				{
-					//standingService.AddTeams(int.Parse(f.league_key));
-					//standingService.AddPlayers(int.Parse(f.league_key));
-					service.Livescore(id);
+					fixtureService.Livescore(id);
 
+					if (footballService.GetTeamByKey(f.home_team_key) == null
+						|| footballService.GetTeamByKey(f.away_team_key) == null)
+					{
+						standingService.AddTeams(int.Parse(id));
+						standingService.AddPlayers(int.Parse(id));
+					}
 					var currentFixture = new Fixture()
 					{
 						EventTime = f.event_time,
 						LeagueName = f.league_name,
 						LeagueRound = f.league_round,
 						EventResult = f.event_final_result,
-						EventStatus = f.event_status,
-						HomeTeam = context.Teams.FirstOrDefault(t => t.TeamKey.ToString() == f.home_team_key),
-						AwayTeam = context.Teams.FirstOrDefault(t => t.TeamKey.ToString() == f.away_team_key)
+						EventStatus = f.event_status == " " ? "0 - 0" : f.event_status,
+						HomeTeam = footballService.GetTeamByKey(f.home_team_key),
+						AwayTeam = footballService.GetTeamByKey(f.away_team_key)
 					};
 
-					list.Add(currentFixture);
+					fixtures.Add(currentFixture);
 				}
-				
-				model.LeagueName = context.Leagues.FirstOrDefault(l => l.LeagueID.ToString() == id).Name;
 			}
 
-			model.Countries = context.Countries;
-			model.Leagues = context.Leagues;
-			model.Fixtures = list.Where(f => f.HomeTeam.Badge != null && f.AwayTeam.Badge != null);
+			fixtureViewModel.LeagueName = footballService.GetLeagueByID(id).Name;
+			fixtureViewModel.Countries = footballService.GetAllCountries();
+			fixtureViewModel.Leagues = footballService.GetAllLeagues();
+			fixtureViewModel.Fixtures = fixtures.Where(f => f.HomeTeam.Badge != null && f.AwayTeam.Badge != null);
 
-			return View(model);
+			return View(fixtureViewModel);
 		}
 	}
 }

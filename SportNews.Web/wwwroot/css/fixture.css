@@ -1,0 +1,17 @@
+﻿.match-box {
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    padding: 25px;
+    margin-top: 15px;
+    width: 100%
+}
+
+.team-box {
+    text-align: center;
+    font-size: 15px;
+    padding-top: 10px;
+}
+
+.league-table {
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    padding-left: 10px;
+}

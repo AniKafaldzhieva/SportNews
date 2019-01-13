@@ -56,6 +56,7 @@
 			services.AddTransient<IStandingService, StandingService>();
 			services.AddTransient<IFixtureService, FixtureService>();
 			services.AddTransient<INewsService, NewsService>();
+			services.AddTransient<IFootballService, FootbalService>();
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 		}
