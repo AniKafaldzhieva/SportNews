@@ -1,0 +1,97 @@
+﻿.post-text {
+    position: absolute;
+    bottom: 0;
+    background: rgb(0, 0, 0); 
+    background: rgba(0, 0, 0, 0.5); 
+    color: #f1f1f1;
+    width: 100%;
+    padding: 20px;
+}
+
+.carousel-inner > .item > img {
+    width: 540px;
+    max-height: 470px;
+    height: auto
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.green-border {
+    border: 2px solid yellowgreen;
+}
+
+.pink-border {
+    border-top: 2px solid deeppink;
+}
+
+.blue-border {
+    border-top: 2px solid deepskyblue;
+}
+
+.dark-background-news {
+    background-color: #2b2b2b;
+    padding-left: 0
+}
+
+.grey-background-news {
+    background-color: #1a1a1a;
+    padding-left: 0
+}
+
+.text-color-white {
+    color: white;
+}
+
+.category-style {
+    background-color: #2b2b2b;
+    color: white;
+    padding: 10px;
+    border-top: 2px solid deeppink;
+}
+
+#container-dark {
+    background-color: #2b2b2b;
+    margin: 0 auto;
+    overflow: hidden;
+    margin-top: 50px;
+    padding: 30px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    font-size: 13px;
+}
+
+.button-pink {
+    color: white;
+    background-color: #2b2b2b;
+    border-color: deeppink;
+}
+
+.button-blue {
+    color: white;
+    background-color: #2b2b2b;
+    border-color: deepskyblue;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    border: 1px solid deeppink;
+    color: white;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+#file-name {
+    color:white;
+}
+
+.standing-table {
+    background-color: #2b2b2b;
+    color: white;
+    border-top: 2px solid deepskyblue;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,123 @@
+﻿@model SportNews.Models.Standing
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Standing</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.League)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.League.ID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LeagueKey)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LeagueKey)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LeagueSeason)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LeagueSeason)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LeagueRound)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LeagueRound)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Place)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Place)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlaceType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlaceType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Team)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Team.ID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamKey)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TeamKey)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GamesPlayed)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GamesPlayed)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Wins)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Wins)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Draw)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Draw)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Losts)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Losts)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoalsFor)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoalsFor)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoalsAgainst)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoalsAgainst)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoalDifference)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoalDifference)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Points)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Points)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StandingUpdated)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StandingUpdated)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ID" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

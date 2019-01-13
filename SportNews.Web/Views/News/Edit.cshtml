@@ -1,0 +1,68 @@
+﻿@model SportNews.Web.ViewModels.NewsViewModel
+@{
+    ViewData["Title"] = "Редакция";
+}
+
+<h2 class="text-color-white">Редакция</h2>
+
+<hr />
+<div class="row text-color-white">
+    <div class="col-md-8">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea asp-for="Content" name="Content" class="form-control" rows="10"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedOn" class="control-label"></label>
+                <input asp-for="CreatedOn" class="form-control" />
+                <span asp-validation-for="CreatedOn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category" class="control-label"></label>
+                <select asp-for="Category" asp-items="Html.GetEnumSelectList<Categories>()" class="form-control"></select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+            <div class="form-group-sm">
+                <label asp-for="Image" class="control-label"></label><br />
+                <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@Model.Image))" style="width: 70%" />
+            </div>
+            <div class="form-group">
+                <label for="file-upload" class="custom-file-upload">
+                    <i class="fa fa-cloud-upload"></i> Upload Image
+                </label>
+                <input id="file-upload" name="Imageinput" type="file" style="display:none;">
+                <label id="file-name"></label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Team.Name" class="control-label">Отбор</label>
+                <select asp-for="TeamID" class="form-control" asp-items="ViewBag.TeamID"></select>
+                <span asp-validation-for="TeamID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Запази" class="btn button-pink" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn button-blue">Обратно</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.querySelector("#file-upload").onchange = function () {
+        document.querySelector("#file-name").textContent = this.files[0].name;
+        }
+    </script>
+}

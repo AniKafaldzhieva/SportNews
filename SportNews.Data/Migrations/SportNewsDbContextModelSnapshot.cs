@@ -105,17 +105,105 @@ namespace SportNews.Web.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SportNews.Models.Country", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CountryID");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CountryID")
+                        .IsUnique();
+
+                    b.ToTable("Countries");
+                });
+
             modelBuilder.Entity("SportNews.Models.League", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CountryID");
+
+                    b.Property<int>("LeagueID");
+
                     b.Property<string>("Name");
 
                     b.HasKey("ID");
 
+                    b.HasIndex("CountryID");
+
                     b.ToTable("Leagues");
+                });
+
+            modelBuilder.Entity("SportNews.Models.News", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AuthorID");
+
+                    b.Property<int>("Category");
+
+                    b.Property<string>("Content");
+
+                    b.Property<DateTime?>("CreatedOn");
+
+                    b.Property<byte[]>("Image");
+
+                    b.Property<int>("TeamID");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AuthorID");
+
+                    b.HasIndex("TeamID");
+
+                    b.ToTable("News");
+                });
+
+            modelBuilder.Entity("SportNews.Models.Player", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Age");
+
+                    b.Property<string>("Country");
+
+                    b.Property<int>("Goals");
+
+                    b.Property<int>("MatchPlayed");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Number");
+
+                    b.Property<string>("PlayerKey");
+
+                    b.Property<int>("RedCards");
+
+                    b.Property<int>("TeamID");
+
+                    b.Property<string>("Type");
+
+                    b.Property<int>("YellowCards");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("TeamID");
+
+                    b.ToTable("Players");
                 });
 
             modelBuilder.Entity("SportNews.Models.Post", b =>
@@ -194,6 +282,55 @@ namespace SportNews.Web.Data.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
+            modelBuilder.Entity("SportNews.Models.Standing", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Draw");
+
+                    b.Property<string>("GamesPlayed");
+
+                    b.Property<string>("GoalDifference");
+
+                    b.Property<string>("GoalsAgainst");
+
+                    b.Property<string>("GoalsFor");
+
+                    b.Property<int>("LeagueId");
+
+                    b.Property<string>("LeagueKey");
+
+                    b.Property<string>("LeagueRound");
+
+                    b.Property<string>("LeagueSeason");
+
+                    b.Property<string>("Losts");
+
+                    b.Property<string>("Place");
+
+                    b.Property<string>("PlaceType");
+
+                    b.Property<string>("Points");
+
+                    b.Property<string>("StandingUpdated");
+
+                    b.Property<int>("TeamID");
+
+                    b.Property<string>("TeamKey");
+
+                    b.Property<string>("Wins");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("LeagueId");
+
+                    b.HasIndex("TeamID");
+
+                    b.ToTable("Standings");
+                });
+
             modelBuilder.Entity("SportNews.Models.Team", b =>
                 {
                     b.Property<int>("ID")
@@ -207,6 +344,8 @@ namespace SportNews.Web.Data.Migrations
                     b.Property<int>("LeagueId");
 
                     b.Property<string>("Name");
+
+                    b.Property<int>("TeamKey");
 
                     b.HasKey("ID");
 
@@ -313,6 +452,34 @@ namespace SportNews.Web.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("SportNews.Models.League", b =>
+                {
+                    b.HasOne("SportNews.Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SportNews.Models.News", b =>
+                {
+                    b.HasOne("SportNews.Models.User", "Author")
+                        .WithMany("News")
+                        .HasForeignKey("AuthorID");
+
+                    b.HasOne("SportNews.Models.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SportNews.Models.Player", b =>
+                {
+                    b.HasOne("SportNews.Models.Team", "Team")
+                        .WithMany("Players")
+                        .HasForeignKey("TeamID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("SportNews.Models.Post", b =>
                 {
                     b.HasOne("SportNews.Models.User", "Author")
@@ -334,6 +501,19 @@ namespace SportNews.Web.Data.Migrations
                     b.HasOne("SportNews.Models.Post", "Post")
                         .WithMany("Replies")
                         .HasForeignKey("PostID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SportNews.Models.Standing", b =>
+                {
+                    b.HasOne("SportNews.Models.League", "League")
+                        .WithMany()
+                        .HasForeignKey("LeagueId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SportNews.Models.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

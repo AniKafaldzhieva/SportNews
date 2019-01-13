@@ -1,0 +1,45 @@
+﻿@model SportNews.Web.ViewModels.NewsDetailsViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="container no-padding">
+    <div id="container-dark" class="col-md-8 col-sm-12 text-color-white pink-border" style="padding-top:5px">
+        <h3>@Model.Title</h3>
+        <div>
+            <h5>Posted by @Model.Author</h5>
+            <span class="fa fa-clock-o" style="padding-bottom: 10px; opacity: 0.3">@Model.CreatedOn</span>
+        </div>
+        <div>
+            <img class="media-object" src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(Model.Image))" style="width: -webkit-fill-available">
+        </div>
+        <div id="container-dark" class="text-color-white">
+            @Html.Raw(@Model.Content)
+        </div>
+    </div>
+    <aside class="col-md-4 col-sm-12" style="margin-top: 10px;">
+        <h2 class="text-color-white" style="margin-top: 0; margin-bottom: 7px">Подобни</h2>
+        <div>
+            <div class="green-border">
+                @foreach (var news in Model.SuggestedNews)
+                {
+                    <div class="col-xs-12 @(Model.SuggestedNews.ToList().IndexOf(news) % 2 == 0 ? "dark-background-news" : "grey-background-news")">
+                        <div class="media-left" style="padding-left: 0">
+                            <a asp-action="Details" asp-route-id="@news.ID">
+                                <img class="media-object" src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(news.Image))" style="width:150px;">
+                            </a>
+                        </div>
+                        <div class="media-body text-color-white">
+                            <h5 class="media-heading">@news.Title</h5>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </aside>
+</div>
+<div style="margin-top: 10px">
+    <a class="btn button-pink" asp-action="Edit" asp-route-id="@Model.ID">Редактирай</a> |
+    <a class="btn button-pink" asp-action="Delete" asp-route-id="@Model.ID">Изтрий</a> | 
+    <a class="btn button-pink" asp-action="Index">Обратно</a>
+</div>

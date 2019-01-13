@@ -3,12 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SportNews.Web</title>
+    <title>@ViewData["Title"] - Sport News</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/forum.css" />
+        <link rel="stylesheet" href="~/css/news.css" />
         <link rel="stylesheet" href="~/css/font-awesome.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </environment>
@@ -31,14 +32,14 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">SportNews.Web</a>
+                <a asp-area="" asp-controller="News" asp-action="Index" class="navbar-brand">Новини</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-area="" asp-controller="Forum" asp-action="Index">Forum</a></li>
+                    @*<li><a asp-area="" asp-controller="News" asp-action="Index">Новини</a></li>*@
+                    <li><a asp-area="" asp-controller="Fixture" asp-action="Index">Резултати</a></li>
+                    <li><a asp-area="" asp-controller="Standing" asp-action="Index">Класиране</a></li>
+                    <li><a asp-area="" asp-controller="Forum" asp-action="Index">Форум</a></li>
                 </ul>
                 <partial name="_LoginPartial" />
             </div>
@@ -51,7 +52,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - SportNews.Web</p>
+            <p>&copy; 2018 - SportNews</p>
         </footer>
     </div>
 
@@ -76,7 +77,7 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-    <script>
+    @*<script>
         let resizeReset = function () {
             w = canvasBody.width = window.innerWidth;
             h = canvasBody.height = window.innerHeight;
@@ -188,6 +189,34 @@
             rgb = opts.lineColor.match(/\d+/g);
         resizeReset();
         setup();
+    </script>*@
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            height: 300,
+            menubar: true,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor textcolor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code help wordcount'
+            ],
+            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css']
+        });
+        function showDiv() {
+            var test = @User.Identity.IsAuthenticated.ToString().ToLower();
+
+            if (test) {
+                document.getElementById('welcomeDiv').style.display = "block";
+                document.getElementById('welcomeDiv').scrollIntoView();
+            } else {
+                window.location.href = '/Identity/Account/Login'
+                alert("Please, log in!");
+            }
+
+        }
     </script>
     @RenderSection("Scripts", required: false)
 </body>

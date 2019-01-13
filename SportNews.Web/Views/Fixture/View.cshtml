@@ -1,0 +1,44 @@
+﻿@model SportNews.Web.ViewModels.FixtureViewModel
+@{
+    ViewData["Title"] = "View";
+}
+
+<div class="container">
+    <div id="container" class="col-md-8 col-sm-12" style="background-color: #2b2b2b; color:white;">
+        <div>
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Dropdown Example
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    @foreach(var i in Model.Leagues)
+                    {
+                        <li><a asp-action="View" asp-controller="Fixtures" asp-route-id="@i.LeagueID">@i.Name</a></li>
+                    }
+                </ul>
+            </div>
+            @foreach (var fixture in Model.Fixtures)
+            {
+            <div class="col-xs-4 col-sm-4 col-lg-8" style="box-shadow: 0 0 5px rgba(0,0,0,0.5); padding: 25px; margin-top: 15px;">
+                <div class="col-xs-4 col-sm-4 col-lg-4">
+                    <figure>
+                        <img style="width: -webkit-fill-available;" src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@fixture.HomeTeam.Badge))" />
+                        <figcaption style="text-align:center; font-size:15px; padding-top: 10px;">@fixture.HomeTeam.Name</figcaption>
+                    </figure>
+                </div>
+                <div class="col-lg-4" style="text-align: center">
+                    <h2>@fixture.EventTime</h2>
+                    <span>VS</span>
+                </div>
+                <div class="col-xs-4 col-sm-4 col-lg-4" style="float: right;">
+                    <figure>
+                        <img style="width: -webkit-fill-available;" src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@fixture.AwayTeam.Badge))" />
+                        <figcaption style="text-align:center; font-size:15px; padding-top: 10px;">@fixture.AwayTeam.Name</figcaption>
+                    </figure>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>

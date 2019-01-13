@@ -1,0 +1,112 @@
+﻿@model SportNews.Web.ViewModels.StandingViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+    <h2>@Model.Title</h2>
+
+    <div class="col-lg-8" style="overflow: -webkit-paged-x; padding-left:0">
+        <table class="table table-striped" style="background-color: dimgrey">
+            <thead>
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        Team
+                    </th>
+                    <th>
+                        P
+                    </th>
+                    <th>
+                        W
+                    </th>
+                    <th>
+                        D
+                    </th>
+                    <th>
+                        L
+                    </th>
+                    <th>
+                        GL
+                    </th>
+                    <th>
+                        GA
+                    </th>
+                    <th>
+                        GD
+                    </th>
+                    <th>
+                        PTS
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Standing)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Place)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Team.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GamesPlayed)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Wins)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Draw)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Losts)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GoalsFor)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GoalsAgainst)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GoalDifference)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Points)
+                        </td>
+                        @*<td>
+                                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                            </td>*@
+
+        </tr>
+                    }
+                </tbody>
+            </table>
+    </div>
+    <div id="container" class="col-lg-3" style="margin-top: 0; background-color: #2b2b2b; border-top: 2px solid deeppink">
+        <aside>
+            @foreach (var country in Model.Countries)
+            {
+                <p>
+                    <a data-toggle="collapse" data-target="#@country.CountryID" role="button" aria-expanded="false" aria-controls="collapseExample" style="color: white">
+                        @country.Name
+                    </a>
+                </p>
+                <ul class="collapse" id="@country.CountryID" style="box-shadow: 0 0 5px rgba(0,0,0,0.5)">
+                    @foreach (var league in Model.Leagues.Where(l => l.CountryID == country.CountryID))
+                    {
+                        <li>
+                            <a asp-action="Index" asp-route-league="@league.LeagueID" style="color: white">@league.Name</a>
+                        </li>
+                    }
+                </ul>
+            }
+        </aside>
+    </div>
+</div>
+

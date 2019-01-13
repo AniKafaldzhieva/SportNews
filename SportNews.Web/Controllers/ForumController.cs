@@ -23,10 +23,17 @@ namespace SportNews.Web.Controllers
         // GET: Forum
         public async Task<IActionResult> Index(string id)
         {
-            var sportNewsDbContext = _context.Teams.Include(t => t.League);
+            var sportNewsDbContext = _context.Teams.Take(15);
+			var posts = _context.Posts.Include(p => p.Author);
 			var model = new ForumViewModel();
 			model.Teams = sportNewsDbContext;
-            return View(model);
+			model.Posts = posts;
+			foreach (var item in model.Teams)
+			{
+				model.PostsCount = posts.Where(p => p.Team.Name == item.Name).Count();
+			}
+			
+			return View(model);
         }
 
         // GET: Forum/Details/5

@@ -6,6 +6,7 @@
 	public class ReplyViewModel
 	{
 		public Post Post { get; set; }
+		public string Content { get; set; }
 		public IList<Reply> Replies { get; set; } 
 	}
 }

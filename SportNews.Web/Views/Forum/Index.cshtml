@@ -9,79 +9,83 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<style>
+    span[aria-expanded=true] .fa-arrow-down {
+        display: none;
+    }
+
+    span[aria-expanded=false] .fa-arrow-up {
+        display: none;
+    }
+</style>
 <div id="container">
-    <section class="col-md-9 col-sm-12 article-wrapper">
-        <div id="inner-wrap">
-            @foreach (var item in Model.Categories)
-            {
-            <ul class="list-group">
-                <li id="header" class="list-group-item d-flex justify-content-between align-items-center">
-                    <div class="row">
-                        <div class="col-xs-7 col-sm-6 col-lg-8">
-                            @Html.DisplayFor(m => item)
-                        </div>
-                        <div class="col-xs-5 col-sm-2 col-lg-1">
-                            <span class="fa fa-clock-o"></span>
-                        </div>
-                        <div class="col-xs-5 col-sm-2 col-lg-1">
+    <div style="width:100%">
+        <section class=""col-md-9 col-sm-12 article-wrapper")">
+            <div id="inner-wrap">
+                @foreach (var item in Model.Categories)
+                {
+                    <ul class="list-group">
+                        <li id="header" class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="row">
+                                <div class="col-xs-7 col-sm-6 col-lg-7">
+                                    @Html.DisplayFor(m => item)
+                                </div>
+                                <div class="col-xs-5 col-sm-2 col-lg-1">
+                                    <span data-toggle="tooltip" title="Posts" class="fa fa-book"></span>
+                                </div>
+                                @*<div class="col-xs-5 col-sm-2 col-lg-1">
                             <span class="fa fa-comment"></span>
-                        </div>
-                        <div class="col-xs-5 col-sm-2 col-lg-2">
-                            <span class="fa fa-book"></span>
-                        </div>
+                        </div>*@
+                                <div class="col-xs-5 col-sm-2 col-lg-2">
+                                    <span data-toggle="tooltip" title="Last post" class="fa fa-clock-o"></span>
+                                </div>
+                                <span data-toggle="collapse" data-target="#@item" aria-expanded="false" style="float: right; margin-right: 20px">
+                                    <i class="fa fa-arrow-down"></i>
+                                    <i class="fa fa-arrow-up"></i>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul id="@item" class="list-group collapse">
+                        @foreach (var item1 in Model.Teams.Where(c => c.Category.ToString() == item).ToList())
+                        {
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center" style="margin-bottom: 20px">
+                                <div class="row">
+                                    <div class="col-xs-7 col-sm-6 col-lg-7">
+                                        <i class="fa fa-soccer-ball-o"></i>
+                                        <a style="font-size: 17px;" asp-controller="Posts" asp-route-id="@item1.ID" asp-action="Index">@Html.DisplayFor(modelItem => item1.Name)</a><br />
+                                    </div>
+
+                                    <div class="col-xs-5 col-sm-2 col-lg-1">
+                                        @Model.PostsCount
+                                    </div>
+                                    @*<div class="col-xs-5 col-sm-2 col-lg-1">
+                        4
+                    </div>*@
+                                    <div class="col-xs-5 col-sm-2 col-lg-1">
+                                        @if (@Model.Posts.LastOrDefault(p => p.Team.ID == item1.ID) != null)
+                                        {
+                                            <img class="media-object" src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@Model.Posts.LastOrDefault(p => p.Team.ID == item1.ID).Author.Avatar))" alt="Notebook" style="width:50px; height: 50px; border-radius: 50%">
+                                        }
+
+                                    </div>
+                                    <div class="col-xs-5 col-sm-2 col-lg-3" style="word-break: break-word; text-align:left">
+                                        @if (@Model.Posts.LastOrDefault(p => p.Team.ID == item1.ID) != null)
+                                        {
+                                            <p><strong>@Model.Posts.LastOrDefault(p => p.Team.Name == item1.Name).Title</strong></p>
+                                            <p>by @Model.Posts.LastOrDefault(p => p.Team.Name == item1.Name).Author.UserName</p>
+                                            <p>@Model.Posts.LastOrDefault(p => p.Team.Name == item1.Name).CreatedOn</p>
+                                        }
+
+                                    </div>
+                                </div>
+                            </li>
+
+                        }
+                    </ul>}
                     </div>
-                </li>
-            </ul>
-
-            @foreach (var item1 in Model.Teams.Where(c => c.Category.ToString() == item).ToList())
-            {
-                <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div class="row">
-                            <div class="col-xs-7 col-sm-6 col-lg-8">
-                                <i class="fa fa-soccer-ball-o"></i>
-                                <a style="font-size: 17px;" asp-controller="Posts" asp-route-id="@item1.Name" asp-action="Index">@Html.DisplayFor(modelItem => item1.Name)</a><br />
-                            </div>
-
-                            <div class="col-xs-5 col-sm-2 col-lg-1">
-                                7
-                            </div>
-                            <div class="col-xs-5 col-sm-2 col-lg-1">
-                                4
-                            </div><div class="col-xs-5 col-sm-2 col-lg-2">
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            }}
-        </div>
-    </section>
-    <aside class="col-md-3 col-sm-12 forum-sidebar">
-        <form method="post">
-            <h4>Use a local account to log in.</h4>
-            <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="@Model.User.Email"></label>
-                <input asp-for="@Model.User.Email" class="form-control" />
-                <span asp-validation-for="@Model.User.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="User.PasswordHash"></label>
-                <input asp-for="User.PasswordHash" class="form-control" />
-                <span asp-validation-for="User.PasswordHash" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-default">Log in</button>
-            </div>
-            <div class="form-group">
-                <p>
-                    <a asp-page="/Account/ForgotPassword" asp-area="Identity">Forgot your password?</a>
-                </p>
-                <p>
-                    <a asp-page="/Account/Register" asp-area="Identity">Register as a new user</a>
-                </p>
-            </div>
-        </form>
-    </aside>
+        </section>
+    </div>
 </div>

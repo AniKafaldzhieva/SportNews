@@ -16,5 +16,8 @@
 		public IEnumerable<Team> Teams { get; set; }
 
 		public User User { get; set; }
+
+		public int PostsCount { get; set; }
+		public IEnumerable<Post> Posts { get; set; }
 	}
 }

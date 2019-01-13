@@ -1,0 +1,49 @@
+﻿@model SportNews.Web.ViewModels.NewsViewModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h3 class="text-color-white">Сигурни ли сте, че искате да изтриете това?</h3>    <hr />
+<div>
+    <h4 class="text-color-white">@Model.Title</h4>
+
+    <dl id="container-dark" class="dl-horizontal text-color-white">
+        <dt>
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+        <dd>
+            @Html.Raw(@Model.Content)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreatedOn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Category)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+        <dd>
+            <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@Model.Image))" style="width: 50%" />
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Team)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Team.Name)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ID" />
+        <input type="submit" value="Изтрий" class="btn button-pink" /> |
+        <a asp-action="Index" class="btn button-blue">Обратно</a>
+    </form>
+</div>

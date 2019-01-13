@@ -16,10 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SportNews.Data\SportNews.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Uploads\" />
+    <ProjectReference Include="..\SportNews.Services\SportNews.Services.csproj" />
   </ItemGroup>
 
 </Project>

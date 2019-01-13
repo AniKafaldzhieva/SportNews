@@ -13,6 +13,9 @@
 	using SportNews.Models;
 	using Microsoft.AspNetCore.Identity.UI.Services;
 	using SportNews.Web.Areas.Identity.Services;
+	using SportNews.Web.Infrastructure.Mapping;
+	using SportNews.Services;
+	using SportNews.Services.Interfaces;
 
 	public class Startup
 	{
@@ -33,6 +36,7 @@
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
+			Mapper.Initialize(cfg => cfg.AddProfile<MappingProfiles>());
 			services.AddAutoMapper();
 
 			services.AddDbContext<SportNewsDbContext>(options =>
@@ -49,11 +53,15 @@
 			services.AddSingleton<IEmailSender, EmailSender>();
 			services.Configure<AuthMessageSenderOptions>(Configuration);
 
+			services.AddTransient<IStandingService, StandingService>();
+			services.AddTransient<IFixtureService, FixtureService>();
+			services.AddTransient<INewsService, NewsService>();
+
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, AutoMapper.IConfigurationProvider autoMapper)
 		{
 			if (env.IsDevelopment())
 			{
@@ -62,7 +70,7 @@
 			}
 			else
 			{
-				app.UseExceptionHandler("/Home/Error");
+				app.UseExceptionHandler("/News/Error");
 				app.UseHsts();
 			}
 
@@ -71,13 +79,16 @@
 			app.UseCookiePolicy();
 
 			app.UseAuthentication();
+			app.UseHttpsRedirection();
 
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute(
 					name: "default",
-					template: "{controller=Home}/{action=Index}/{id?}");
+					template: "{controller=News}/{action=Index}/{id?}");
 			});
+
+			//autoMapper.AssertConfigurationIsValid();
 		}
 	}
 }

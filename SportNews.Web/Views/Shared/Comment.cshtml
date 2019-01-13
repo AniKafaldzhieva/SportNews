@@ -1,0 +1,56 @@
+﻿@model SportNews.Web.ViewModels.ReplyViewModel
+
+@*<h4>Reply</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Comment">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <input asp-for="Content" class="form-control" />
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedOn" class="control-label"></label>
+                <input asp-for="CreatedOn" class="form-control" />
+                <span asp-validation-for="CreatedOn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PostID" class="control-label"></label>
+                <select asp-for="PostID" class ="form-control" asp-items="ViewBag.PostID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AuthorID" class="control-label"></label>
+                <select asp-for="AuthorID" class ="form-control" asp-items="ViewBag.AuthorID"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>*@
+
+<form asp-action="Create" asp-controller="Reply" asp-route-postid="@Model.Post.ID" asp-route-authorid="@Model.Post.AuthorID" asp-route-returnUrl="@Url.Page("/Reply", new { area = "" })" >
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Content" class="control-label"></label>
+        <textarea class="form-control" name="Content" rows="10"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    @Html.HiddenFor(model => model.Post.ID)
+    @Html.HiddenFor(model => model.Post)
+    @Html.HiddenFor(model => model.Post.AuthorID)
+    @Html.HiddenFor(model => model.Post.Author)
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-default" />
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
