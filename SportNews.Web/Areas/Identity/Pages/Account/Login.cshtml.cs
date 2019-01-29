@@ -17,12 +17,14 @@ namespace SportNews.Web.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+			_userManager = userManager;
         }
 
         [BindProperty]
@@ -72,10 +74,16 @@ namespace SportNews.Web.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+				// This doesn't count login failures towards account lockout
+				// To enable password failures to trigger account lockout, set lockoutOnFailure: true
+				var user = await _userManager.FindByEmailAsync(Input.Email);
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
-                if (result.Succeeded)
+				if (!await _userManager.IsEmailConfirmedAsync(user))
+				{
+					ModelState.AddModelError(string.Empty, "Моля, потвърдете имейла си!");
+					return Page();
+				}
+				if (result.Succeeded && await _userManager.IsEmailConfirmedAsync(user))
                 {
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
@@ -91,7 +99,7 @@ namespace SportNews.Web.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Невалидно потребителско име или парола.");
                     return Page();
                 }
             }

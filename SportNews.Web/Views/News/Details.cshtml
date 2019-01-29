@@ -39,7 +39,10 @@
     </aside>
 </div>
 <div style="margin-top: 10px">
-    <a class="btn button-pink" asp-action="Edit" asp-route-id="@Model.ID">Редактирай</a> |
-    <a class="btn button-pink" asp-action="Delete" asp-route-id="@Model.ID">Изтрий</a> | 
+    @if (User.IsInRole(RoleConstraints.Administrator) || User.IsInRole(RoleConstraints.Moderator))
+    {
+        <a class="btn button-pink" asp-action="Edit" asp-route-id="@Model.ID">Редактирай</a>
+        <a class="btn button-pink" asp-action="Delete" asp-route-id="@Model.ID">Изтрий</a>
+    }
     <a class="btn button-pink" asp-action="Index">Обратно</a>
 </div>

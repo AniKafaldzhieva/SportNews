@@ -1,22 +1,19 @@
 ﻿namespace SportNews.Web.Controllers
 {
-	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
-	using System.Net;
-	using System.Threading.Tasks;
 	using AutoMapper;
+	using Microsoft.AspNetCore.Authorization;
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.AspNetCore.Identity;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.Rendering;
 	using Microsoft.EntityFrameworkCore;
 	using SportNews.Models;
-	using SportNews.Models.Enums;
-	using SportNews.Services;
 	using SportNews.Services.Interfaces;
 	using SportNews.Web.Data;
+	using SportNews.Web.Infrastructure.Constraints;
 	using SportNews.Web.ViewModels;
 
 	public class NewsController : Controller
@@ -42,15 +39,17 @@
 			AllNewsViewModel newsViewModel = new AllNewsViewModel();
 
 			List<News> allNews = newsService.GetAllNews();
-			newsViewModel.TopNews = allNews.FirstOrDefault();
-			newsViewModel.FirstNews = allNews.ElementAtOrDefault(1);
-			newsViewModel.SecondNews = allNews.ElementAtOrDefault(2);
-			newsViewModel.SliderNews = allNews.GetRange(4, 3);
-			newsViewModel.News = allNews.GetRange(7, 4);
-			newsViewModel.LastNews = allNews.Skip(10);
-			newsViewModel.AllNews = allNews;
-			newsViewModel.Standing = _service.GetStanding(468);
-
+			if (allNews.Count() > 10)
+			{
+				newsViewModel.TopNews = allNews.FirstOrDefault();
+				newsViewModel.FirstNews = allNews.ElementAtOrDefault(1);
+				newsViewModel.SecondNews = allNews.ElementAtOrDefault(2);
+				newsViewModel.SliderNews = allNews.GetRange(4, 3);
+				newsViewModel.News = allNews.GetRange(7, 4);
+				newsViewModel.LastNews = allNews.Skip(10);
+				newsViewModel.AllNews = allNews;
+				newsViewModel.Standing = _service.GetStanding(468);
+			}
 			return View(newsViewModel);
 		}
 
@@ -99,6 +98,7 @@
 		// POST: News/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = RoleConstraints.Administrator + "," + RoleConstraints.Moderator)]
 		public IActionResult Create(NewsViewModel newsViewModel, [FromForm] IFormFile Imageinput)
 		{
 			if (ModelState.IsValid)
@@ -156,6 +156,7 @@
 		// POST: News/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = RoleConstraints.Administrator + "," + RoleConstraints.Moderator)]
 		public IActionResult Edit(int id, [Bind("ID,Title,Content,CreatedOn,Category,Image,AuthorID,TeamID")] NewsViewModel newsViewModel, [FromForm] IFormFile Imageinput)
 		{
 			if (id != newsViewModel.ID)
@@ -228,6 +229,7 @@
 		// POST: News/Delete/5
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = RoleConstraints.Administrator + "," + RoleConstraints.Moderator)]
 		public IActionResult DeleteConfirmed(int id)
 		{
 			var news = newsService.FindNewsByID(id);

@@ -13,5 +13,6 @@
 		public int LeagueId { get; set; }
 		public League League { get; set; }
 		public ICollection<Player> Players { get; set; } = new List<Player>();
+		public ICollection<Post> Posts { get; set; } = new List<Post>();
 	}
 }

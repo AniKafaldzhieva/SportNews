@@ -4,6 +4,7 @@
 	using SportNews.Models.Enums;
 	using System;
 	using System.Collections.Generic;
+	using System.ComponentModel;
 
 	public class ForumViewModel
 	{
@@ -11,13 +12,10 @@
 		{
 			Categories = Enum.GetNames(typeof(Categories));
 		}
+		[DisplayName("Категории")]
 		public string[] Categories { get; set; }
-
-		public IEnumerable<Team> Teams { get; set; }
-
 		public User User { get; set; }
-
-		public int PostsCount { get; set; }
+		public IEnumerable<Topic> Topics { get; set; }
 		public IEnumerable<Post> Posts { get; set; }
 	}
 }

@@ -5,10 +5,10 @@
 }
 
 <div class="container">
-    <h2>@Model.Title</h2>
+    <h2 class="text-color-white">@Model.Title</h2>
 
     <div class="col-lg-8" style="overflow: -webkit-paged-x; padding-left:0">
-        <table class="table table-striped" style="background-color: dimgrey">
+        <table class="table standing-table">
             <thead>
                 <tr>
                     <th>
@@ -77,31 +77,25 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Points)
                         </td>
-                        @*<td>
-                                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                            </td>*@
-
-        </tr>
-                    }
-                </tbody>
-            </table>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-    <div id="container" class="col-lg-3" style="margin-top: 0; background-color: #2b2b2b; border-top: 2px solid deeppink">
+    <div id="container-dark" class="col-lg-3 pink-border text-color-white" style="margin-top: 0;">
         <aside>
             @foreach (var country in Model.Countries)
             {
                 <p>
-                    <a data-toggle="collapse" data-target="#@country.CountryID" role="button" aria-expanded="false" aria-controls="collapseExample" style="color: white">
+                    <a data-toggle="collapse" data-target="#@country.CountryID" role="button" aria-expanded="false" aria-controls="collapseExample" class="league-name" style="color:white">
                         @country.Name
                     </a>
                 </p>
-                <ul class="collapse" id="@country.CountryID" style="box-shadow: 0 0 5px rgba(0,0,0,0.5)">
+                <ul class="collapse shadow" id="@country.CountryID">
                     @foreach (var league in Model.Leagues.Where(l => l.CountryID == country.CountryID))
                     {
-                        <li>
-                            <a asp-action="Index" asp-route-league="@league.LeagueID" style="color: white">@league.Name</a>
+                        <li class="league-element">
+                            <a asp-action="Index" asp-route-league="@league.LeagueID" style="color:white">@league.Name</a>
                         </li>
                     }
                 </ul>
@@ -110,3 +104,14 @@
     </div>
 </div>
 
+@*<script>
+    var test = document.getElementById("place");
+
+    @foreach (var item in Model.Standing)
+    {
+        if (item.PlaceType == "Promotion - Champions League (Group Stage)")
+        {
+            test.sty
+        }
+    }
+</script>*@

@@ -1,13 +1,13 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using SportNews.Models;
-
-namespace SportNews.Web.Areas.Identity.Pages.Account.Manage
+﻿namespace SportNews.Web.Areas.Identity.Pages.Account.Manage
 {
-    public class PersonalDataModel : PageModel
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.RazorPages;
+	using Microsoft.Extensions.Logging;
+	using SportNews.Models;
+
+	public class PersonalDataModel : PageModel
     {
         private readonly UserManager<User> _userManager;
         private readonly ILogger<PersonalDataModel> _logger;

@@ -1,0 +1,48 @@
+﻿@media only screen and (min-width: 300px) and (max-width: 1200px) {
+    .reply-avatar {
+        width: 50px;
+        height: 50px;
+        display: inline-flex;
+    }
+
+    .comment {
+        display: inline-flex;
+        width: 100%;
+    }
+
+    .post-count {
+        display: none;
+    }
+
+    .reply-author {
+        padding-left: 10px;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    #container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .reply-content {
+        font-size: 18px;
+    }
+
+    .container {
+        padding: 0;
+    }
+
+    .fixture {
+        display: inline-block;
+    }
+
+    .team-avatar {
+        width: 50px;
+        height: 50px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+}

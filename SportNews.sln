@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportNews.Data", "SportNews
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportNews.Models", "SportNews.Models\SportNews.Models.csproj", "{966681F8-9F8F-4696-8B37-F4E793037C00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportNews.Services", "SportNews.Services\SportNews.Services.csproj", "{0A5FA446-A3E9-4EEB-856B-8D51991FF464}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportNews.Services", "SportNews.Services\SportNews.Services.csproj", "{0A5FA446-A3E9-4EEB-856B-8D51991FF464}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

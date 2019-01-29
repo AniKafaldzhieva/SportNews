@@ -16,6 +16,7 @@
 	using SportNews.Web.Infrastructure.Mapping;
 	using SportNews.Services;
 	using SportNews.Services.Interfaces;
+	using SportNews.Web.Infrastructure.Extensions;
 
 	public class Startup
 	{
@@ -57,6 +58,10 @@
 			services.AddTransient<IFixtureService, FixtureService>();
 			services.AddTransient<INewsService, NewsService>();
 			services.AddTransient<IFootballService, FootbalService>();
+			services.AddTransient<IForumService, ForumService>();
+			services.AddTransient<IPostService, PostService>();
+			services.AddTransient<IReplyService, ReplyService>();
+			services.AddTransient<IAdminService, AdminService>();
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 		}
@@ -64,6 +69,8 @@
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, AutoMapper.IConfigurationProvider autoMapper)
 		{
+			app.UseDatabaseMigration();
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -81,9 +88,13 @@
 
 			app.UseAuthentication();
 			app.UseHttpsRedirection();
-
+			
 			app.UseMvc(routes =>
 			{
+				routes.MapRoute(
+						name: "areas",
+						template: "{area:exists}/{controller=News}/{action=Index}/{id?}");
+
 				routes.MapRoute(
 					name: "default",
 					template: "{controller=News}/{action=Index}/{id?}");

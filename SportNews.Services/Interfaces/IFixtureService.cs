@@ -6,7 +6,7 @@
 	public interface IFixtureService
 	{
 		JsonFixture AddFixture(DateTime date);
-		JsonFixture AddFixture(DateTime date, string leagueId);
+		void AddFixture(DateTime date, string leagueId);
 		JsonFixture Livescore(string leagueId);
 	}
 }

@@ -1,42 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
-using SportNews.Models;
-using SportNews.Web.Data;
-using SportNews.Web.ViewModels;
-
-namespace SportNews.Web.Controllers
+﻿namespace SportNews.Web.Controllers
 {
-    public class PostsController : Controller
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Authorization;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.Rendering;
+	using Microsoft.AspNetCore.Routing;
+	using Microsoft.EntityFrameworkCore;
+	using SportNews.Models;
+	using SportNews.Services.Interfaces;
+	using SportNews.Web.Data;
+	using SportNews.Web.Infrastructure.Constraints;
+	using SportNews.Web.ViewModels;
+
+	public class PostsController : Controller
     {
         private readonly SportNewsDbContext _context;
 		private readonly UserManager<User> manager;
+		private readonly IPostService postService;
 
-        public PostsController(SportNewsDbContext context, UserManager<User> manager)
+        public PostsController(SportNewsDbContext context, UserManager<User> manager, IPostService postService)
         {
             _context = context;
 			this.manager = manager;
+			this.postService = postService;
         }
 
-        // GET: Posts
-        public async Task<IActionResult> Index(int id)
-        {
-            var sportNewsDbContext = _context.Posts.Where(p=>p.Team.ID == id);
-			var model = new PostUserViewModel();
-			model.TeamID = id;
-			model.Team = _context.Teams.FirstOrDefault(t => t.ID == id);
-			model.Posts= _context.Posts.Where(p=>p.Team.ID == id).ToList();
-			return View(model);
-        }
+		// GET: Posts
+		public IActionResult Index(int id)
+		{
+			PostUserViewModel postUserViewModel = new PostUserViewModel
+			{
+				TeamID = id,
+				Team = postService.GetTeamByID(id),
+				Posts = postService.GetPostsByTeamID(id)
+			};
 
-        // GET: Posts/Details/5
-        public async Task<IActionResult> Details(int? id)
+			return View(postUserViewModel);
+		}
+
+		// GET: Posts/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -62,92 +66,100 @@ namespace SportNews.Web.Controllers
 				return NotFound();
 			}
 
-			var team = _context.Teams
-				.FirstOrDefault(m => m.ID == teamid);
+			var team = postService.GetTeamByID(teamid);
 			if (team == null)
 			{
 				return NotFound();
 			}
-			var post = new Post();
-			post.Team = team;
-			return View(post);
+			var postViewModel = new PostViewModel
+			{
+				Team = team
+			};
+			return View(postViewModel);
         }
 
         // POST: Posts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Post post)
+		[Authorize(Roles = RoleConstraints.Administrator + "," + RoleConstraints.Moderator)]
+		public async Task<IActionResult> Create(PostViewModel postViewModel)
         {
             if (ModelState.IsValid)
             {
-				post.Author = await this.manager.GetUserAsync(HttpContext.User);
-                _context.Add(post);
-                await _context.SaveChangesAsync();
+				postViewModel.Author = await manager.GetUserAsync(HttpContext.User);
+
+				Post post = AutoMapper.Mapper.Map<Post>(postViewModel);
+				postService.AddPost(post);
+
                 return RedirectToAction("Index", new RouteValueDictionary(
-										new { id = post.TeamID }));
+										new { id = postViewModel.TeamID }));
 			}
 			ViewData["Team"] = new SelectList(_context.Set<Team>(), "Name", "Name");
 
-			return View(post);
+			return View(postViewModel);
         }
 
-        // GET: Posts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+		// GET: Posts/Edit/5
+		public IActionResult Edit(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
 
-            var post = await _context.Posts.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-            ViewData["AuthorID"] = new SelectList(_context.Set<User>(), "Id", "Id", post.AuthorID);
-            return View(post);
-        }
+			Post post = postService.FindPostByID(id);
 
-        // POST: Posts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Content,CreatedOn,AuthorID")] Post post)
-        {
-            if (id != post.ID)
-            {
-                return NotFound();
-            }
+			if (post == null)
+			{
+				return NotFound();
+			}
+			ViewData["AuthorID"] = new SelectList(_context.Set<User>(), "Id", "Id", post.AuthorID);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PostExists(post.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["AuthorID"] = new SelectList(_context.Set<User>(), "Id", "Id", post.AuthorID);
-            return View(post);
-        }
+			PostViewModel postViewModel = AutoMapper.Mapper.Map<PostViewModel>(post);
 
-        // GET: Posts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+			return View(postViewModel);
+		}
+
+		// POST: Posts/Edit/5
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Roles = RoleConstraints.Administrator + "," + RoleConstraints.Moderator)]
+		public IActionResult Edit(int id, PostViewModel postViewModel)
+		{
+			if (id != postViewModel.ID)
+			{
+				return NotFound();
+			}
+
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					Post post = AutoMapper.Mapper.Map<Post>(postViewModel);
+
+					postService.UpdatePost(post);
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!postService.PostExists(postViewModel.ID))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+				return RedirectToAction("Index", new RouteValueDictionary(
+										new { id = postViewModel.TeamID }));
+			}
+			ViewData["AuthorID"] = new SelectList(_context.Set<User>(), "Id", "Id", postViewModel.AuthorID);
+
+			return View(postViewModel);
+		}
+
+		// GET: Posts/Delete/5
+		public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -155,7 +167,7 @@ namespace SportNews.Web.Controllers
             }
 
             var post = await _context.Posts
-                .Include(p => p.Author)
+                .Include(p => p.Author).Include(p => p.Team)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (post == null)
             {
@@ -165,20 +177,18 @@ namespace SportNews.Web.Controllers
             return View(post);
         }
 
-        // POST: Posts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var post = await _context.Posts.FindAsync(id);
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+		// POST: Posts/Delete/5
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		[Authorize(Roles = RoleConstraints.Administrator + "," + RoleConstraints.Moderator)]
+		public IActionResult DeleteConfirmed(int id)
+		{
+			var post = postService.FindPostByID(id);
+			postService.DeletePost(post);
 
-        private bool PostExists(int id)
-        {
-            return _context.Posts.Any(e => e.ID == id);
-        }
-    }
+			return NoContent();
+			//return RedirectToAction("Index", new RouteValueDictionary(
+			//							new { id = post.TeamID })); ;
+		}
+	}
 }

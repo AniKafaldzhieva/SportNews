@@ -1,59 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
-using SportNews.Models;
-using SportNews.Web.Data;
-using SportNews.Web.ViewModels;
-
-namespace SportNews.Web.Controllers
+﻿namespace SportNews.Web.Controllers
 {
-    public class ReplyController : Controller
+	using System;
+	using System.Linq;
+	using System.Threading.Tasks;
+	using AutoMapper;
+	using AutoMapper.QueryableExtensions;
+	using Microsoft.AspNetCore.Authorization;
+	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.Rendering;
+	using Microsoft.AspNetCore.Routing;
+	using Microsoft.EntityFrameworkCore;
+	using SportNews.Models;
+	using SportNews.Services.Interfaces;
+	using SportNews.Web.Data;
+	using SportNews.Web.ViewModels;
+
+	public class ReplyController : Controller
     {
         private readonly SportNewsDbContext _context;
 		private readonly IMapper _mapper;
+		private readonly IReplyService replyService;
+		private readonly IPostService postService;
 
-		public ReplyController(SportNewsDbContext context, IMapper mapper)
+		public ReplyController(SportNewsDbContext context, IMapper mapper, IReplyService replyService, IPostService postService)
         {
             _context = context;
 			_mapper = mapper;
+			this.replyService = replyService;
+			this.postService = postService;
         }
 
-        // GET: Reply
-        public async Task<IActionResult> Index(int postid)
-        {
-			//var sportNewsDbContext = _context.Replies.Where(p => p.PostID == postid).ToList();
-			//var a = _context.Posts.Where(p => p.ID == postid).FirstOrDefault().Replies;
-			//var c = this.User.Identity.Name;
+		// GET: Reply
+		public IActionResult Index(int postid)
+		{
+			//var replies = await _context.Posts.Where(p => p.ID == postid)
+			//		   .ProjectTo<ReplyViewModel>(_mapper)
+			//		   .ToListAsync();
 
-			//var b = _context.Users.Where(p => p.UserName == c).FirstOrDefault().Replies;
+			ReplyViewModel replyViewModel = new ReplyViewModel()
+			{
+				Post = postService.GetPostByID(postid),
+				Replies = replyService.GetRepliesByPostID(postid)
+			};
 
-			//var model = new ReplyViewModel();
-			//model.Post = _context.Posts.Where(p => p.ID == postid).FirstOrDefault();
-			//model.Replies = _context.Posts.Where(p => p.ID == postid).FirstOrDefault().Replies.ToList();
-			var reply = _context.Replies
-				.Include(r => r.Author)
-				.Include(r => r.Post).Where(p => p.PostID == postid).ToList();
-			//Mapper.Map<IList<Reply>, IList<ReplyViewModel>>(reply);
-			var replies = await _context.Posts.Where(p => p.ID == postid)
-					   .ProjectTo<ReplyViewModel>(_mapper)
-					   .ToListAsync();
-			//var replies = _mapper.Map<List<Reply>, List<ReplyViewModel>>(reply);
-			var a = new ReplyViewModel() { Post = _context.Posts.Where(p => p.ID == postid).FirstOrDefault(), Replies = reply};
-		
-			return View(a);
-        }
+			return View(replyViewModel);
+		}
 
-        // GET: Reply/Details/5
-        public async Task<IActionResult> Details(int? id)
+		// GET: Reply/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -100,6 +94,7 @@ namespace SportNews.Web.Controllers
             {
 				//reply.ID = 0;
 				reply.CreatedOn = DateTime.Now;
+				reply.AuthorID = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
 				//reply.Post = _context.Posts.Where(p=>p.ID == id).FirstOrDefault();
                 _context.Add(reply);
                 await _context.SaveChangesAsync();
@@ -194,8 +189,9 @@ namespace SportNews.Web.Controllers
             var reply = await _context.Replies.FindAsync(id);
             _context.Replies.Remove(reply);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+			return RedirectToAction("Index", new RouteValueDictionary(
+										new { controller = "Reply", action = "Index", postid = reply.PostID }));
+		}
 
         private bool ReplyExists(int id)
         {

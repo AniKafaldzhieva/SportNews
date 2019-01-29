@@ -1,0 +1,10 @@
+﻿.comment {
+    text-align: center;
+    margin: 5px 0 5px;
+}
+
+.reply-avatar {
+    width: 120px;
+    height: 120px;
+    display: inline-flex;
+}

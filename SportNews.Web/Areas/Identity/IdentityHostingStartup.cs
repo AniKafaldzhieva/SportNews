@@ -15,12 +15,12 @@ namespace SportNews.Web.Areas.Identity
     {
         public void Configure(IWebHostBuilder builder)
         {
-            builder.ConfigureServices((context, services) => {
-				//services.AddDefaultIdentity<User>(config =>
-				//{
-				//	config.SignIn.RequireConfirmedEmail = true;
-				//});
-			});
+   //         builder.ConfigureServices((context, services) => {
+			//	services.AddDefaultIdentity<User>(config =>
+			//	{
+			//		config.SignIn.RequireConfirmedEmail = true;
+			//	});
+			//});
         }
     }
 }

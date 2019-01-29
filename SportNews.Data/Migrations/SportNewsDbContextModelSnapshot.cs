@@ -123,6 +123,49 @@ namespace SportNews.Web.Data.Migrations
                     b.ToTable("Countries");
                 });
 
+            modelBuilder.Entity("SportNews.Models.Fixture", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AwayTeamID");
+
+                    b.Property<string>("AwayTeamKey");
+
+                    b.Property<string>("CountryName");
+
+                    b.Property<string>("EventDate");
+
+                    b.Property<string>("EventKey");
+
+                    b.Property<string>("EventTime");
+
+                    b.Property<string>("FinalResult");
+
+                    b.Property<string>("HalftTimeResult");
+
+                    b.Property<int>("HomeTeamID");
+
+                    b.Property<string>("HomeTeamKey");
+
+                    b.Property<string>("LeagueKey");
+
+                    b.Property<string>("LeagueRound");
+
+                    b.Property<string>("LeagueSeason");
+
+                    b.Property<string>("Status");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AwayTeamID");
+
+                    b.HasIndex("HomeTeamID");
+
+                    b.ToTable("Fixtures");
+                });
+
             modelBuilder.Entity("SportNews.Models.League", b =>
                 {
                     b.Property<int>("ID")
@@ -354,6 +397,29 @@ namespace SportNews.Web.Data.Migrations
                     b.ToTable("Teams");
                 });
 
+            modelBuilder.Entity("SportNews.Models.Topic", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AuthorID");
+
+                    b.Property<int>("Category");
+
+                    b.Property<string>("Subtitle");
+
+                    b.Property<int>("TeamID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AuthorID");
+
+                    b.HasIndex("TeamID");
+
+                    b.ToTable("Topics");
+                });
+
             modelBuilder.Entity("SportNews.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -452,6 +518,19 @@ namespace SportNews.Web.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("SportNews.Models.Fixture", b =>
+                {
+                    b.HasOne("SportNews.Models.Team", "AwayTeam")
+                        .WithMany()
+                        .HasForeignKey("AwayTeamID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SportNews.Models.Team", "HomeTeam")
+                        .WithMany()
+                        .HasForeignKey("HomeTeamID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("SportNews.Models.League", b =>
                 {
                     b.HasOne("SportNews.Models.Country", "Country")
@@ -487,7 +566,7 @@ namespace SportNews.Web.Data.Migrations
                         .HasForeignKey("AuthorID");
 
                     b.HasOne("SportNews.Models.Team", "Team")
-                        .WithMany()
+                        .WithMany("Posts")
                         .HasForeignKey("TeamID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -522,6 +601,18 @@ namespace SportNews.Web.Data.Migrations
                     b.HasOne("SportNews.Models.League", "League")
                         .WithMany("Teams")
                         .HasForeignKey("LeagueId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SportNews.Models.Topic", b =>
+                {
+                    b.HasOne("SportNews.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorID");
+
+                    b.HasOne("SportNews.Models.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

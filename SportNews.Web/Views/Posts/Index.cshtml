@@ -1,59 +1,74 @@
 ﻿@model SportNews.Web.ViewModels.PostUserViewModel
 
-<p>
-    <a asp-action="Create" asp-route-teamid="@Model.TeamID">Create New</a>
-</p>
+@if (User.IsInRole(RoleConstraints.Administrator) || User.IsInRole(RoleConstraints.Moderator))
+{
+    <div class="create-button-position">
+        <a asp-action="Create" asp-route-teamid="@Model.TeamID" class="btn button-blue">Създай тема</a>
+    </div>
+}
 <div id="container">
     <section>
         <div id="inner-wrap">
             <ul class="list-group">
                 <li id="header" class="list-group-item d-flex justify-content-between align-items-center">
-                    
                     <div class="row">
-                        <div class="col-xs-7 col-sm-6 col-lg-8">
+                        <div class="col-xs-4 col-sm-6 col-lg-7">
                             <a id="category">@Model.Team.Name</a>
                         </div>
-                        <div class="col-xs-5 col-sm-2 col-lg-1">
-                            <span class="fa fa-clock-o"></span>
-                        </div>
-                        <div class="col-xs-5 col-sm-2 col-lg-1">
-                            <span class="fa fa-comment"></span>
-                        </div>
-                        <div class="col-xs-5 col-sm-2 col-lg-2">
+                        <div class="col-xs-2 col-sm-2 col-lg-1">
                             <span class="fa fa-book"></span>
                         </div>
+                        <div class="col-xs-2 col-sm-2 col-lg-1">
+                            <span class="fa fa-comment"></span>
                         </div>
-</li>
+                        <div class="col-xs-3 col-sm-2 col-lg-2" style="padding-right:0">
+                            <span class="fa fa-clock-o"></span>
+                        </div>
+                    </div>
+                </li>
             </ul>
-            @foreach (var item in Model.Posts.ToList())
+            @foreach (var item in Model.Posts)
             {
-                <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                <ul class="list-group" style="color: black">
+                    <li class="list-group-item">
                         <div class="row">
-                            <div class="col-xs-7 col-sm-6 col-lg-8">
+                            <div class="col-xs-4 col-sm-6 col-lg-7">
                                 <i class="fa fa-soccer-ball-o"></i>
                                 <a style="font-size: 17px;" asp-controller="Reply" asp-route-postid="@item.ID" asp-action="Index">@Html.DisplayFor(modelItem => item.Title)</a><br />
                                 <p id="forum-content" class="badge-primary badge-pill">
                                     @Html.DisplayFor(modelItem => item.Content)
                                 </p>
                             </div>
-                            
-                            <div class="col-xs-5 col-sm-2 col-lg-1">
-                               @Model.Posts.Count()
+                            <div class="col-xs-2 col-sm-2 col-lg-1">
+                                @Model.Posts.Count()
                             </div>
-                            <div class="col-xs-5 col-sm-2 col-lg-1">
-                                4
-                            </div><div class="col-xs-5 col-sm-2 col-lg-2">
+                            <div class="col-xs-2 col-sm-2 col-lg-1">
+                                @Model.Posts.Count()
+                            </div>
+                            <div>
+                                <div class="col-xs-3 col-sm-2 col-lg-1" style="padding-right:0">
+                                    <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Author.Avatar))" style="width:50px; height: 50px; border-radius: 50%" />
+                                </div>
+                                <div class="col-xs-3 col-sm-2 col-lg-2" style="padding-left:0">
+                                    by <a style="color: #AA0000;word-break:break-word">@Html.DisplayFor(modelItem => item.Author.UserName)</a>
+                                    <br />
+                                    <i class="fa fa-clock-o"></i>@Html.DisplayFor(modelItem => item.CreatedOn, "{0:MM/dd/yyyy}")
+                                </div>
+                                @if (User.IsInRole(RoleConstraints.Administrator) || User.IsInRole(RoleConstraints.Moderator))
+                                {
+                                    <div style="float: right; padding-right:10px">
+                                        <form asp-action="Delete" asp-route-id="@item.ID" data-ajax="true">
+                                            <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary" data-toggle="tooltip" title="Редактирай"><i class="fa fa-edit"></i></a>
+                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip" title="Изтрий">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                                <br>
+                            </div>
 
-    <i class="fa fa-user-circle"></i>
-    @*<a href="./viewtopic.php?f=5&amp;p=41&amp;sid=d7019df6cae6a323d6ba42640d8c8f40#p41" title="Standard Announcement" class="lastsubject">Standard Announcement</a> <br>*@
-    by <a style="color: #AA0000;word-break:break-word">@Html.DisplayFor(modelItem => item.Author.UserName) AniAniAniAniAniaANinania</a>
-    @*<a href="./viewtopic.php?f=5&amp;p=41&amp;sid=d7019df6cae6a323d6ba42640d8c8f40#p41" title="View the latest post">*@
-    @*<i class="icon fa-external-link-square fa-fw icon-lightgray icon-md" aria-hidden="true"></i><span class="sr-only">View the latest post</span>
-        </a>*@
-    <br>@Html.DisplayFor(modelItem => item.CreatedOn, "{0:MM/dd/yyyy}")
-    @*<a asp-controller="Reply" asp-action="Create" asp-route-id="@item.ID">Отговори</a>*@
-</div></div>
+                        </div>
                     </li>
                 </ul>
             }

@@ -64,13 +64,16 @@ namespace SportNews.Web.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+			var avatar = user.Avatar;
+			ViewData["Avatar"] = Convert.ToBase64String(user.Avatar);
 
             Username = userName;
 
             Input = new InputModel
             {
                 Email = email,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+				Avatar = avatar
             };
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
@@ -138,29 +141,7 @@ namespace SportNews.Web.Areas.Identity.Pages.Account.Manage
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
         }
-		public async Task OnPostSearchAsync([FromForm] IFormFile Imageinput)
-		{
-			var files = HttpContext.Request.Form.Files;
-			if (Imageinput != null)
-
-			{
-				if (Imageinput.Length > 0)
-
-				//Convert Image to byte and save to database
-
-				{
-
-					byte[] p1 = null;
-					using (var fs1 = Imageinput.OpenReadStream())
-					using (var ms1 = new MemoryStream())
-					{
-						fs1.CopyTo(ms1);
-						p1 = ms1.ToArray();
-					}
-					//user.Avatar = p1;
-				}
-			}
-		}
+		
 		public async Task<IActionResult> OnPostUploadAsync([FromForm] IFormFile Imageinput)
 		{
 			if (!ModelState.IsValid)

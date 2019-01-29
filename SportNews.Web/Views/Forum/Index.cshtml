@@ -1,91 +1,81 @@
 ﻿@model SportNews.Web.ViewModels.ForumViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Форум";
 }
 
-<h2>Index</h2>
+@if (User.IsInRole(RoleConstraints.Administrator) || User.IsInRole(RoleConstraints.Moderator))
+{
+    <div class="create-button-position">
+        <a asp-action="Create" class="btn button-blue">Добави нов</a>
+    </div>
+}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-<style>
-    span[aria-expanded=true] .fa-arrow-down {
-        display: none;
-    }
-
-    span[aria-expanded=false] .fa-arrow-up {
-        display: none;
-    }
-</style>
 <div id="container">
-    <div style="width:100%">
-        <section class=""col-md-9 col-sm-12 article-wrapper")">
+    <div>
+        <section>
             <div id="inner-wrap">
-                @foreach (var item in Model.Categories)
+                @foreach (var category in Model.Categories)
                 {
                     <ul class="list-group">
-                        <li id="header" class="list-group-item d-flex justify-content-between align-items-center">
+                        <li id="header" class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-7 col-sm-6 col-lg-7">
-                                    @Html.DisplayFor(m => item)
+                                    @Html.DisplayFor(m => category)
                                 </div>
                                 <div class="col-xs-5 col-sm-2 col-lg-1">
                                     <span data-toggle="tooltip" title="Posts" class="fa fa-book"></span>
                                 </div>
-                                @*<div class="col-xs-5 col-sm-2 col-lg-1">
-                            <span class="fa fa-comment"></span>
-                        </div>*@
                                 <div class="col-xs-5 col-sm-2 col-lg-2">
                                     <span data-toggle="tooltip" title="Last post" class="fa fa-clock-o"></span>
                                 </div>
-                                <span data-toggle="collapse" data-target="#@item" aria-expanded="false" style="float: right; margin-right: 20px">
+                                <span data-toggle="collapse" data-target="#@category" aria-expanded="false" style="float: right; margin-right: 20px">
                                     <i class="fa fa-arrow-down"></i>
                                     <i class="fa fa-arrow-up"></i>
                                 </span>
                             </div>
                         </li>
                     </ul>
-                    <ul id="@item" class="list-group collapse">
-                        @foreach (var item1 in Model.Teams.Where(c => c.Category.ToString() == item).ToList())
+                    <ul id="@category" class="list-group collapse">
+                        @foreach (var topic in Model.Topics.Where(c => c.Category.ToString() == category).ToList())
                         {
-
-                            <li class="list-group-item d-flex justify-content-between align-items-center" style="margin-bottom: 20px">
+                            <li class="list-group-item" style="margin-bottom: 20px; color: black">
                                 <div class="row">
-                                    <div class="col-xs-7 col-sm-6 col-lg-7">
+                                    <div class="col-xs-7 col-sm-6 col-lg-7 topic-text">
                                         <i class="fa fa-soccer-ball-o"></i>
-                                        <a style="font-size: 17px;" asp-controller="Posts" asp-route-id="@item1.ID" asp-action="Index">@Html.DisplayFor(modelItem => item1.Name)</a><br />
+                                        <a style="font-size: 17px;" asp-controller="Posts" asp-route-id="@topic.TeamID" asp-action="Index">@Html.DisplayFor(modelItem => topic.Team.Name)</a><br />
+                                        <span style="color: black">@topic.Subtitle</span>
                                     </div>
-
                                     <div class="col-xs-5 col-sm-2 col-lg-1">
-                                        @Model.PostsCount
+                                        @topic.Team.Posts.Count()
                                     </div>
-                                    @*<div class="col-xs-5 col-sm-2 col-lg-1">
-                        4
-                    </div>*@
                                     <div class="col-xs-5 col-sm-2 col-lg-1">
-                                        @if (@Model.Posts.LastOrDefault(p => p.Team.ID == item1.ID) != null)
+                                        @if (@Model.Posts.LastOrDefault(p => p.Team.ID == topic.TeamID) != null)
                                         {
-                                            <img class="media-object" src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@Model.Posts.LastOrDefault(p => p.Team.ID == item1.ID).Author.Avatar))" alt="Notebook" style="width:50px; height: 50px; border-radius: 50%">
+                                            <img class="media-object" src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@Model.Posts.LastOrDefault(p => p.Team.ID == topic.TeamID).Author.Avatar))" alt="Notebook" style="width:50px; height: 50px; border-radius: 50%">
                                         }
-
                                     </div>
-                                    <div class="col-xs-5 col-sm-2 col-lg-3" style="word-break: break-word; text-align:left">
-                                        @if (@Model.Posts.LastOrDefault(p => p.Team.ID == item1.ID) != null)
+                                    <div class="col-xs-5 col-sm-2 col-lg-3 last-post">
+                                        @if (@Model.Posts.LastOrDefault(p => p.Team.ID == topic.TeamID) != null)
                                         {
-                                            <p><strong>@Model.Posts.LastOrDefault(p => p.Team.Name == item1.Name).Title</strong></p>
-                                            <p>by @Model.Posts.LastOrDefault(p => p.Team.Name == item1.Name).Author.UserName</p>
-                                            <p>@Model.Posts.LastOrDefault(p => p.Team.Name == item1.Name).CreatedOn</p>
+                                            <p><strong>@Model.Posts.LastOrDefault(p => p.Team.Name == topic.Team.Name).Title</strong></p>
+                                            <p>by @Model.Posts.LastOrDefault(p => p.Team.Name == topic.Team.Name).Author.UserName</p>
+                                            <p>@Model.Posts.LastOrDefault(p => p.Team.Name == topic.Team.Name).CreatedOn</p>
                                         }
-
                                     </div>
+                                    @if (User.IsInRole(RoleConstraints.Administrator) || User.IsInRole(RoleConstraints.Moderator))
+                                    {
+                                        <div style="float: right">
+                                            <a asp-action="Edit" asp-route-id="@topic.ID" class="btn btn-primary" data-toggle="tooltip" title="Редактирай"><i class="fa fa-edit"></i></a>
+                                            <a asp-action="Delete" asp-route-id="@topic.ID" class="btn btn-danger" data-toggle="tooltip" title="Изтрий"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    }
                                 </div>
                             </li>
-
                         }
-                    </ul>}
-                    </div>
+                    </ul>
+                }
+            </div>
         </section>
     </div>
 </div>

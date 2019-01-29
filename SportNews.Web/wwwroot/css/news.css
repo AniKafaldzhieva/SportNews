@@ -73,6 +73,10 @@
     border-color: deepskyblue;
 }
 
+.button-blue:hover , .button-pink:hover {
+    color: lightgrey;
+}
+
 input[type="file"] {
     display: none;
 }
@@ -94,4 +98,20 @@ input[type="file"] {
     color: white;
     border-top: 2px solid deepskyblue;
     margin-bottom: 10px;
+}
+
+#GroupStageCL {
+    background: blue;
+}
+
+#Relegation {
+    background: red;
+}
+
+#QualificationEL {
+    background: yellow;
+}
+
+#GroupStangeEL {
+    background: orange;
 }

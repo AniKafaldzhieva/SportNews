@@ -1,6 +1,5 @@
 ﻿namespace SportNews.Web.Data
 {
-	using Microsoft.AspNetCore.Identity;
 	using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 	using Microsoft.EntityFrameworkCore;
 	using SportNews.Models;
@@ -12,6 +11,7 @@
 		{
 		}
 
+		public DbSet<Topic> Topics { get; set; }
 		public DbSet<Post> Posts { get; set; }
 		public DbSet<Team> Teams { get; set; }
 		public DbSet<League> Leagues { get; set; }
@@ -20,6 +20,7 @@
 		public DbSet<Country> Countries { get; set; }
 		public DbSet<Standing> Standings { get; set; }
 		public DbSet<Player> Players { get; set; }
+		public DbSet<Fixture> Fixtures { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{

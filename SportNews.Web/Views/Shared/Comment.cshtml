@@ -36,18 +36,15 @@
 </div>*@
 
 <form asp-action="Create" asp-controller="Reply" asp-route-postid="@Model.Post.ID" asp-route-authorid="@Model.Post.AuthorID" asp-route-returnUrl="@Url.Page("/Reply", new { area = "" })" >
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div><br/>
     <div class="form-group">
-        <label asp-for="Content" class="control-label"></label>
         <textarea class="form-control" name="Content" rows="10"></textarea>
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
     @Html.HiddenFor(model => model.Post.ID)
     @Html.HiddenFor(model => model.Post)
-    @Html.HiddenFor(model => model.Post.AuthorID)
-    @Html.HiddenFor(model => model.Post.Author)
     <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-default" />
+        <input type="submit" value="Отговори" class="btn button-pink" />
     </div>
 </form>
 

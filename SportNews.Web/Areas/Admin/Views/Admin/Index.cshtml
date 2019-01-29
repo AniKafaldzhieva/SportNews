@@ -1,0 +1,59 @@
+﻿@model SportNews.Web.Areas.Admin.ViewModels.UserRoleViewModel
+
+@{
+    ViewData["Title"] = "Администрация";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div id="container-dark">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Потребителско име
+                </th>
+                <th>
+                    Имейл
+                </th>
+                <th>
+                    Добави в роля
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Users)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        <form asp-action="AddToRoleAsync" method="post">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <input type="hidden" name="UserId" value="@item.Id" />
+                                </div>
+                                <div class="col-md-9    ">
+                                    <select name="Role" asp-items="@(new SelectList(Model.Roles))" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Запази" class="btn button-pink" />
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                    @*<td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

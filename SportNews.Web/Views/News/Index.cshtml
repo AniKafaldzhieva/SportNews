@@ -1,12 +1,15 @@
 ﻿@model SportNews.Web.ViewModels.AllNewsViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Новини";
 }
 
-@*<div>
+@if (User.IsInRole(RoleConstraints.Administrator) || User.IsInRole(RoleConstraints.Moderator))
+{
+    <div style="float: right; margin: 10px;">
         <a asp-action="Create" class="btn button-blue">Добави нова</a>
-    </div>*@
+    </div>
+}
 
 <div class="container">
     <section class="col-md-12 col-sm-12">
@@ -20,17 +23,20 @@
                 </ol>
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner">
-                    @for (int i = 0; i < Model.SliderNews.Count(); i++)
+                    @if (Model.SliderNews != null && Model.SliderNews.Count() == 3)
                     {
-                        <div class="item @(i == 0 ? "active" : string.Empty)">
-                            <a asp-action="Details" asp-route-id="@Model.SliderNews.ToArray()[i].ID">
-                                <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@Model.SliderNews.ToArray()[i].Image))" style="width: 100%" />
+                        @for (int i = 0; i < Model.SliderNews.Count(); i++)
+                        {
+                            <div class="item @(i == 0 ? "active" : string.Empty)">
+                                <a asp-action="Details" asp-route-id="@Model.SliderNews.ToArray()[i].ID">
+                                    <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@Model.SliderNews.ToArray()[i].Image))" style="width: 100%" />
 
-                                <div class="carousel-caption">
-                                    <h3>@Model.SliderNews.ToArray()[i].Title</h3>
-                                </div>
-                            </a>
-                        </div>
+                                    <div class="carousel-caption">
+                                        <h3>@Model.SliderNews.ToArray()[i].Title</h3>
+                                    </div>
+                                </a>
+                            </div>
+                        }
                     }
                 </div>
                 <!-- Left and right controls -->
@@ -44,6 +50,8 @@
                 </a>
             </div>
         </div>
+        @if (Model.FirstNews != null && Model.SecondNews != null)
+        {
         <div>
             <div class="col-lg-4 no-padding">
                 <a asp-action="Details" asp-route-id="@Model.FirstNews.ID">
@@ -62,10 +70,13 @@
                 </div>
             </div>
         </div>
+        }
     </section>
     <section class="col-md-12 col-sm-12">
         <h3 class="text-color-white">Водещи новини</h3>
         <div class="green-border">
+            @if (Model.TopNews != null && Model.News != null)
+            {
             <div class="col-xs-12 col-lg-6 no-padding">
                 <a asp-action="Details" asp-route-id="@Model.TopNews.ID">
                     <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@Model.TopNews.Image))" class="img-responsive" style="width:100%; min-height: 396px;">
@@ -74,6 +85,7 @@
                     @Model.TopNews.Title
                 </div>
             </div>
+
             <div class="col-xs-12 col-lg-6 no-padding">
                 @foreach (var item in Model.News)
                 {
@@ -87,12 +99,15 @@
                     </div>
                 }
             </div>
+            }
         </div>
     </section>
     <div>
         <section class="col-md-9 col-sm-12">
             <h2 class="text-color-white">Последни новини</h2>
             <div>
+                @if (Model.LastNews != null)
+                {
                 <div class="green-border">
                     @foreach (var news in Model.LastNews)
                     {
@@ -108,6 +123,7 @@
                         </div>
                     }
                 </div>
+                }
             </div>
         </section>
         <aside class="col-md-3 col-sm-12" style="margin-top: 10px;">
@@ -133,6 +149,8 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if (Model.Standing != null)
+                    {
                     @foreach (var item in Model.Standing.OrderByDescending(i => i.standing_PTS).Take(6))
                     {
                         <tr>
@@ -152,13 +170,15 @@
                                 @Html.DisplayFor(modelItem => item.standing_PTS)
                             </td>
                         </tr>
-                    }
+                    }}
                 </tbody>
             </table>
         </aside>
         <aside class="col-md-3 col-sm-12">
             <h3 class="text-color-white">Категории</h3>
             <div class="category-style">
+                @if (Model.AllNews != null)
+                {
                 @foreach (var category in Model.Categories)
                 {
                     <ul style="padding: 15px">
@@ -167,7 +187,7 @@
                             <span style="float: right">@Model.AllNews.Where(n => n.Category.ToString() == category).Count()</span>
                         </li>
                     </ul>
-                }
+                }}
             </div>
         </aside>
     </div>

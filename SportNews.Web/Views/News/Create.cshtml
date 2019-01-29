@@ -1,12 +1,11 @@
 ﻿@model SportNews.Web.ViewModels.NewsViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Създаване";
 }
 
-<h2>Create</h2>
+<h2>Създаване на новина</h2>
 
-<h4>News</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
@@ -32,32 +31,26 @@
                 <select asp-for="Category" asp-items="Html.GetEnumSelectList<Categories>()" class="form-control"></select>
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
-                <input type="file" name="Imageinput" asp-for="Image" class="form-control button-pink" />
-                <span asp-validation-for="Image" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <label for="file-upload" class="custom-file-upload">
                     <i class="fa fa-cloud-upload"></i> Upload Image
                 </label>
                 <input id="file-upload" name="Imageinput" type="file" style="display:none;">
                 <label id="file-name"></label>
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TeamID" class="control-label"></label>
                 <select asp-for="TeamID" class ="form-control" asp-items="ViewBag.Team"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Създавай" class="btn button-pink" />
+                <a asp-action="Index" class="btn button-blue">Обратно</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

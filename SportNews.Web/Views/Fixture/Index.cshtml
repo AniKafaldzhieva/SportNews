@@ -1,11 +1,11 @@
-﻿@model SportNews.Web.ViewModels.FixtureViewModel
+﻿@model SportNews.Web.ViewModels.AllFixturesViewModel
 @{
     ViewData["Title"] = "Index";
 }
 
 <div class="container">
     <div id="container-dark" class="col-md-8 col-sm-12 text-color-white blue-border" style="text-align: center">
-        <div style="display: inline-grid">
+        <div style="display: inline-grid" class="fixture">
             <h3>@Model.LeagueName</h3>
             @if (Model.Fixtures.Count() == 0)
             {
@@ -18,11 +18,11 @@
                 <div class="col-xs-4 col-sm-4 col-lg-8 match-box">
                     <div class="col-xs-4 col-sm-4 col-lg-4">
                         <figure>
-                            <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@fixture.HomeTeam.Badge))" style="width: -webkit-fill-available;" />
+                            <img class="team-avatar" src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@fixture.HomeTeam.Badge))"/>
                             <figcaption class="team-box">@fixture.HomeTeam.Name</figcaption>
                         </figure>
                     </div>
-                    <div class="col-lg-4" style="text-align: center">
+                    <div class="col-xs-4 col-lg-4" style="text-align: center">
                         <h2>@fixture.EventTime</h2>
                         <span>VS</span>
                         <h2>@fixture.EventResult</h2>
@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-xs-4 col-sm-4 col-lg-4" style="float: right;">
                         <figure>
-                            <img style="width: -webkit-fill-available;" src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@fixture.AwayTeam.Badge))" />
+                            <img class="team-avatar" src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@fixture.AwayTeam.Badge))" />
                             <figcaption class="team-box">@fixture.AwayTeam.Name</figcaption>
                         </figure>
                     </div>
@@ -43,15 +43,15 @@
             @foreach (var country in Model.Countries)
             {
                 <p>
-                    <a data-toggle="collapse" data-target="#@country.CountryID" role="button" aria-expanded="false" aria-controls="collapseExample" style="color: white">
+                    <a data-toggle="collapse" data-target="#@country.CountryID" role="button" aria-expanded="false" aria-controls="collapseExample" class="league-name" style="color:white">
                         @country.Name
                     </a>
                 </p>
-                <ul class="collapse league-table" id="@country.CountryID">
+                <ul class="collapse shadow" id="@country.CountryID">
                     @foreach (var league in Model.Leagues.Where(l => l.CountryID == country.CountryID))
                     {
-                        <li>
-                            <a asp-action="Index" asp-controller="Fixture" asp-route-id="@league.LeagueID" style="color: white">@league.Name</a>
+                        <li class="league-element">
+                            <a asp-action="Index" asp-controller="Fixture" asp-route-id="@league.LeagueID" style="color:white">@league.Name</a>
                         </li>
                     }
                 </ul>

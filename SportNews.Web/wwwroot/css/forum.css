@@ -83,7 +83,7 @@ ul.topic dt .list-info {
 
     overflow: hidden;
 }
-span{
+span {
     color: white;
     background-color: none;
     font-weight: 300;
@@ -104,4 +104,27 @@ p {
 
 li {
     list-style: none;
+}
+
+span[aria-expanded=true] .fa-arrow-down {
+    display: none;
+}
+
+span[aria-expanded=false] .fa-arrow-up {
+    display: none;
+}
+
+.last-post {
+    word-break: break-word;
+    text-align: left
+}
+
+.topic-text {
+    overflow: hidden;
+    word-break: break-word;
+}
+
+.create-button-position {
+    margin-top: 10px;
+    float: right
 }
